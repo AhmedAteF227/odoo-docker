@@ -1,32 +1,34 @@
+
 services:
-  web:
-    image: odoo:13.0
-    platform: linux/amd64
-    container_name: odoo13
+  odoo18:
+    build: .
+    container_name: odoo18
+    environment:
+      - DEBUG=0
     depends_on:
       - db
     ports:
       - "8069:8069"
+      - "5678:5678"
     volumes:
-      - odoo13-data:/var/lib/odoo
+      - odoo18-data:/var/lib/odoo
       - ./config/odoo:/etc/odoo
       - ./config/requirements:/requirements
       - ./config/log:/var/log/odoo
       - ./addons/custom:/mnt/extra-addons
-      - ./addons/odoo/addons:/odoo13_addons/
-
+      - ./addons/enterprise:/mnt/enterprise
+      - ./addons/odoo/addons:/odoo18_addons/
   db:
-    image: postgres:12
-    platform: linux/amd64
-    container_name: db_13
+    image: postgres:16.13
+    container_name: db_18
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo13-db-data:/var/lib/postgresql/data/pgdata  
+      - odoo18-db-data:/var/lib/postgresql/data/pgdata  
 
 volumes:
-  odoo13-data:
-  odoo13-db-data:
+  odoo18-data:
+  odoo18-db-data:
